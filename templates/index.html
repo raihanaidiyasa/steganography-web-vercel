@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steganografi LSB</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Steganografi LSB: Sembunyikan Teks di Gambar</h1>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="form-container">
+            <div class="form-card">
+                <h2>Encode Teks ke Gambar</h2>
+                <form method="post" enctype="multipart/form-data">
+                    <label for="image_encode">Pilih Gambar (PNG, BMP, JPG):</label>
+                    <input type="file" name="image" id="image_encode" accept="image/*" required>
+                    
+                    <label for="secret_text">Teks Rahasia:</label>
+                    <textarea name="secret_text" id="secret_text" rows="4" placeholder="Masukkan teks yang ingin disembunyikan di sini..." required></textarea>
+                    
+                    <button type="submit" name="encode">Encode & Simpan</button>
+                </form>
+
+                {% if encoded_image %}
+                <div class="result">
+                    <h3>Hasil Encode:</h3>
+                    <p>Gambar berhasil di-encode. Silakan download hasilnya.</p>
+                    <a href="{{ url_for('download_file', filename=encoded_image) }}" class="download-button" download>Download Gambar</a>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-card">
+                <h2>Decode Teks dari Gambar</h2>
+                <form method="post" enctype="multipart/form-data">
+                    <label for="image_decode">Pilih Gambar Stegano (PNG):</label>
+                    <input type="file" name="image" id="image_decode" accept="image/png" required>
+                    
+                    <button type="submit" name="decode">Decode Teks</button>
+                </form>
+
+                {% if decoded_text %}
+                <div class="result">
+                    <h3>Hasil Decode:</h3>
+                    <textarea readonly>{{ decoded_text }}</textarea>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
